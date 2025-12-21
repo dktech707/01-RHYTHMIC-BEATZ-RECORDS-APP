@@ -1,0 +1,6 @@
+/sw.js
+  Cache-Control: no-store
+/app.js
+  Cache-Control: no-store
+/*.json
+  Cache-Control: no-store

@@ -1,0 +1,18 @@
+{
+  "brand": {
+    "appName": "Rhythmic Beatz Records",
+    "primaryColor": "darkBlue",
+    "accentColor": "darkRed"
+  },
+  "links": {
+    "website": "https://www.rhythmicbeatzrecords.com",
+    "instagram": "",
+    "facebook": "",
+    "soundcloudLabel": "",
+    "youtubePodcast": ""
+  },
+  "cta": {
+    "bookNowEmail": "",
+    "demoEmail": ""
+  }
+}

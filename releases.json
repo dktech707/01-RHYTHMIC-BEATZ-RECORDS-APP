@@ -1,0 +1,67 @@
+[
+  {
+    "cat": "RBR001",
+    "title": "Definition of Hardgroove EP",
+    "artists": "DKTech",
+    "date": "2025-07-23",
+    "beatport": "https://www.beatport.com/release/definition-of-hardgroove-lp/5173874",
+    "status": "Out now"
+  },
+  {
+    "cat": "RBR002",
+    "title": "Mentalni Proljev EP",
+    "artists": "Wyrus",
+    "date": "2025-08-20",
+    "beatport": "https://www.beatport.com/release/mentalni-proljev-ep/5224364",
+    "status": "Out now"
+  },
+  {
+    "cat": "RBR003",
+    "title": "ChaosFest Domace Kiselo EP",
+    "artists": "BELOFF, DKTech",
+    "date": "2025-08-28",
+    "beatport": "https://www.beatport.com/release/chaosfest-domace-kiselo-ep/5278196",
+    "status": "Out now"
+  },
+  {
+    "cat": "RBR004",
+    "title": "Keep The Groove EP",
+    "artists": "DKTech",
+    "date": "2025-10-05",
+    "beatport": "https://www.beatport.com/release/keep-the-groove-ep/5366966",
+    "status": "Out now"
+  },
+  {
+    "cat": "RBR005",
+    "title": "Techno Scream EP",
+    "artists": "DKTech",
+    "date": "2025-10-14",
+    "beatport": "https://www.beatport.com/release/techno-scream-ep/5447334",
+    "status": "Out now"
+  },
+  {
+    "cat": "RBR006",
+    "title": "Deep Resistor",
+    "artists": "BELOFF",
+    "date": "2025-11-25",
+    "beatport": "https://www.beatport.com/release/deep-resistor/5621444",
+    "status": "Out now"
+  },
+  {
+    "cat": "RBR007",
+    "title": "Society Collapse (X‑MAS Edition)",
+    "artists": "DKTech",
+    "date": "2025-12-25",
+    "beatport": "https://www.beatport.com/release/society-collapse-x-mas-edition/5704934",
+    "elasticstage": "https://elasticstage.com/rhythmicbeatzrecords/releases/society-collapse-album",
+    "cover": "./assets/covers/rbr007.png",
+    "vinylMockup": "./assets/releases/rbr007_vinyl_mockup.png",
+    "qr": "https://elasticstage.com/rhythmicbeatzrecords/releases/society-collapse-album",
+    "formats": [
+      "Digital",
+      "Vinyl",
+      "CD"
+    ],
+    "status": "Pre‑order open"
+  }
+]

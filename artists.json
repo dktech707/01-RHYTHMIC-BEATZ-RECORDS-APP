@@ -1,0 +1,101 @@
+[
+  {
+    "name": "DKTech",
+    "country": "Croatia",
+    "city": "Kutina / Velika Gorica",
+    "bio": "Croatian techno DJ/producer focused on hardgroove / hard techno. Co‑founder of Rhythmic Beatz Records.",
+    "photo": "./assets/artists/dktech.jpg",
+    "socials": {
+      "Instagram": "https://www.instagram.com/dktech707/",
+      "SoundCloud": "https://soundcloud.com/dinoktech",
+      "Beatport": "https://www.beatport.com/artist/dktech/1250070",
+      "Linktree": "https://linktr.ee/dktech707",
+      "Website": "https://www.rhythmicbeatzrecords.com/"
+    }
+  },
+  {
+    "name": "Wyrus",
+    "country": "Croatia",
+    "city": "Zagreb",
+    "bio": "Zagreb-based techno DJ/producer active since early 2000s; producer and performer in Croatia and abroad.",
+    "photo": "./assets/artists/wyrus.jpg",
+    "socials": {
+      "Instagram": "https://www.instagram.com/wyrus_dj/",
+      "SoundCloud": "https://soundcloud.com/wyrus",
+      "Beatport": "https://www.beatport.com/artist/wyrus/60632",
+      "RA": "https://ra.co/dj/wyrus/biography"
+    }
+  },
+  {
+    "name": "MarAxe",
+    "country": "Sweden",
+    "city": "Umeå",
+    "bio": "Swedish techno DJ/producer known for harder, driving, hypnotic techno; founder/manager of STØK Recordings.",
+    "photo": "./assets/artists/maraxe.jpg",
+    "socials": {
+      "Instagram": "https://www.instagram.com/maraxe_official/",
+      "SoundCloud": "https://soundcloud.com/maraxe",
+      "Beatport": "https://www.beatport.com/artist/maraxe/657833",
+      "Linktree": "https://linktr.ee/MarAxe"
+    }
+  },
+  {
+    "name": "Andy BSK",
+    "country": "Slovakia",
+    "city": "Veľký Krtíš",
+    "bio": "Slovak techno/hardgroove DJ/producer; long production history and active across vinyl + digital.",
+    "photo": "./assets/artists/andy bsk.jpg",
+    "socials": {
+      "Instagram": "https://www.instagram.com/djandybsk/",
+      "SoundCloud": "https://soundcloud.com/andy-bsk",
+      "Beatport": "https://www.beatport.com/artist/andy-bsk/155273",
+      "Website": "https://www.djandybsk.com/"
+    }
+  },
+  {
+    "name": "Lively Racket",
+    "country": "Ireland",
+    "city": "Midlands",
+    "bio": "Irish DJ/producer focused on hard techno / hard dance with classic techno influences.",
+    "photo": "./assets/artists/lively racket.jpg",
+    "socials": {
+      "Instagram": "https://www.instagram.com/lively_racket/",
+      "SoundCloud": "https://soundcloud.com/livelyracket",
+      "Beatport": "https://www.beatport.com/artist/lively-racket/1069060"
+    }
+  },
+  {
+    "name": "K-Deey",
+    "country": "Belgium",
+    "city": "Sint‑Truiden",
+    "bio": "Belgian techno DJ/producer with hypnotic/raw/acid-leaning sound; also associated with Void Rhythm.",
+    "photo": "./assets/artists/k deey.jpg",
+    "socials": {
+      "Instagram": "https://www.instagram.com/kdeey13/",
+      "SoundCloud": "https://soundcloud.com/kimbo-7",
+      "Beatport": "https://www.beatport.com/artist/k-deey/854928",
+      "RA": "https://ra.co/dj/k-deey"
+    }
+  },
+  {
+    "name": "Coutts",
+    "country": "Northern Ireland",
+    "city": "Bangor",
+    "bio": "Techno alias of Gordon Coutts; DJ/producer and credited as A&R for Keep On Techno Records.",
+    "photo": "./assets/logos/rbr-logo.png",
+    "socials": {
+      "Instagram": "https://www.instagram.com/gordoncouttsmusic/",
+      "SoundCloud": "https://soundcloud.com/gordoncoutts",
+      "Beatport": "https://www.beatport.com/artist/coutts/731562",
+      "Linktree": "https://linktr.ee/gordoncoutts"
+    }
+  },
+  {
+    "name": "BELOFF",
+    "country": "Serbia",
+    "city": "",
+    "bio": "Techno DJ/producer. (Add full bio + socials when ready.)",
+    "photo": "./assets/artists/beloff.jpg",
+    "socials": {}
+  }
+]

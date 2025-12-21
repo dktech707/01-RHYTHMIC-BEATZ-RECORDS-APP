@@ -1,0 +1,72 @@
+[
+  {
+    "id": "crkva-2025-12-14",
+    "title": "PeakTime ft. DKTech",
+    "subtitle": "Crkva RI",
+    "date": "2025-12-14",
+    "time": "23:00",
+    "city": "Rijeka",
+    "venue": "Crkva Club",
+    "status": "UPCOMING",
+    "segment": "ROSTER",
+    "artistIds": [
+      "dktech"
+    ],
+    "headline": "PeakTime session",
+    "lineup": [
+      "DKTech"
+    ],
+    "image": "./assets/events/crkva_flyer_4x5.png",
+    "notes": "Underground peak-time pressure. Hardgroove / hypnotic cuts. Doors 23:00."
+  },
+  {
+    "id": "depo-2025-12-31",
+    "title": "Depo Club — NYE",
+    "subtitle": "DKTech b2b Thea Kick",
+    "date": "2025-12-31",
+    "time": "23:00",
+    "city": "Zagreb",
+    "venue": "DEPO Club",
+    "status": "UPCOMING",
+    "segment": "ROSTER",
+    "artistIds": [
+      "dktech",
+      "thea-kick"
+    ],
+    "headline": "Collective takeover",
+    "lineup": [
+      "DKTech",
+      "Thea Kick"
+    ],
+    "image": "./assets/events/depo_2025-12-31/depo_poster.jpg",
+    "notes": "New Year’s collective takeover. Dark, fast, and proper."
+  },
+  {
+    "id": "heavyweight-2025-09-13",
+    "title": "Heavyweight Division",
+    "subtitle": "Rhythmic Beatz x Kisses of Techno",
+    "date": "2025-09-13",
+    "time": "",
+    "city": "Zagreb",
+    "venue": "Primarius craft",
+    "status": "PAST",
+    "segment": "SPECIAL",
+    "headline": "Heavyweight recap",
+    "lineup": [
+      "MarAxe",
+      "Zoky",
+      "DKTech",
+      "TiHaC",
+      "Willy"
+    ],
+    "image": "./assets/events/zagreb_2025-09-13/heavyweight.jpg",
+    "recap": "A heavyweight edition with cold-room pressure and zero compromise. Tight programming, proper sound, and a full-floor push from open to close.",
+    "highlights": [
+      "Hardgroove focus",
+      "Underground crowd",
+      "No filler",
+      "Proper system"
+    ],
+    "notes": "Kisses of Techno x Rhythmic Beatz."
+  }
+]

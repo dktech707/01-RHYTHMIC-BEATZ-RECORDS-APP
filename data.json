@@ -1,0 +1,33 @@
+{
+  "appName": "Rhythmic Beatz Records",
+  "theme": {
+    "primary": "#081128",
+    "accent": "#5a0b14"
+  },
+  "contacts": {
+    "infoEmail": "rhythmicbeatzrecords@gmail.com",
+    "promoEmail": "rhythmicbeatz.promo@gmail.com",
+    "founderEmail": "dktech707@gmail.com",
+    "whatsapp": "+385955109329",
+    "whatsappInvite": "https://chat.whatsapp.com/EauvMvJuZ3d75FSddSzJop"
+  },
+  "links": {
+    "website": "https://www.rhythmicbeatzrecords.com/",
+    "beatportLabel": "https://www.beatport.com/label/rhythmic-beatz-records/131869",
+    "instagram": "https://www.instagram.com/rhythmic_beatz_records/",
+    "soundcloud": "https://soundcloud.com/rhythmic-beatz-records",
+    "youtube": "https://www.youtube.com/@RhythmicBeatzRecords",
+    "bandcamp": "https://rhythmicbeatzrecords.bandcamp.com/",
+    "elasticStage": "https://elasticstage.com/rhythmicbeatzrecords",
+    "tiktok": "https://www.tiktok.com/@rhythmicbeatzrecords"
+  },
+  "shop": {
+    "samplePacks": [
+      {
+        "name": "RBR Sample Packs",
+        "status": "setup_needed",
+        "checkoutUrl": ""
+      }
+    ]
+  }
+}
