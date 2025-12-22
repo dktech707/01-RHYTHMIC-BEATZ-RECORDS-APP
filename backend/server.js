@@ -3,7 +3,7 @@
 const path = require('path');
 const fastify = require('fastify')({ logger: true });
 
-const { loadJson } = require('./lib/loadJson');
+const { errorEnvelope } = require('./lib/loadJson');
 
 // JSON data files live one directory above /backend, at repo root.
 const DATA_DIR = path.resolve(__dirname, '..');
@@ -14,6 +14,19 @@ fastify.get('/api/health', async () => ({ ok: true }));
 fastify.register(require('./routes/artists'), { prefix: '/api', DATA_DIR });
 fastify.register(require('./routes/releases'), { prefix: '/api', DATA_DIR });
 fastify.register(require('./routes/events'), { prefix: '/api', DATA_DIR });
+
+// Public error handler: return sanitized errors unless explicitly marked as public.
+fastify.setErrorHandler((err, request, reply) => {
+  const status = Number(err.statusCode || 500);
+
+  if (err && err.public) {
+    return reply.code(status).send(err.public);
+  }
+
+  return reply
+    .code(status)
+    .send(errorEnvelope('INTERNAL_ERROR', 'Internal Server Error'));
+});
 
 const port = Number(process.env.PORT || 3000);
 const host = process.env.HOST || '0.0.0.0';
