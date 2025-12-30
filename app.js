@@ -12,7 +12,7 @@ const $ = (sel) => document.querySelector(sel);
 function esc(s){ return String(s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
 async function loadAll(){
-  const BUILD = "2025-12-21-REV5.0";
+  const BUILD = "2025-12-30-REV5.1";
   const fetchJson = async (path) => {
     const r = await fetch(path, { cache: 'no-store' });
     if(!r.ok) throw new Error(`HTTP ${r.status} for ${path}`);
@@ -63,8 +63,8 @@ async function loadAll(){
       if(el) el.href = cfg.links.website;
     }
     if(cfg?.appName) document.title = cfg.appName;
-
-    render();
+    // initial route -> tab
+    setActiveTab(tabFromPath(location.pathname), {push:false});
     initSignupOnce();
     registerSW();
 
@@ -83,11 +83,42 @@ async function loadAll(){
   }
 }
 
-function setActiveTab(tab){
+function tabFromPath(pathname){
+  const p = String(pathname||'/').replace(/^\/+|\/+$/g,'').toLowerCase();
+  const map = {
+    '': 'home',
+    'home': 'home',
+    'events': 'events',
+    'artists': 'artists',
+    'releases': 'releases',
+    'store': 'store',
+    'shop': 'store',
+    'more': 'more',
+    'news': 'news',
+    'booking': 'booking',
+    'demo': 'demo'
+  };
+  return map[p] || 'home';
+}
+
+function pathFromTab(tab){
+  if(!tab || tab==='home') return '/';
+  if(tab==='store') return '/store';
+  return `/${tab}`;
+}
+
+function setActiveTab(tab, opts={push:true}){
   state.tab = tab;
+  // sync bottom nav active state when the tab exists there
   document.querySelectorAll('.tab').forEach(b=>{
     b.classList.toggle('is-active', b.dataset.tab === tab);
   });
+
+  if(opts.push){
+    const path = pathFromTab(tab);
+    if(location.pathname !== path) history.pushState({tab}, '', path);
+  }
+
   render();
   window.scrollTo({top:0, behavior:'auto'});
 }
@@ -130,6 +161,14 @@ function relFormats(r){
   if(r.elasticstage || (state.config && state.config.links && state.config.links.elasticStage)) { arr.push('Vinyl'); arr.push('CD'); }
   return [...new Set(arr)];
 }
+
+function isPastDate(dateStr){
+  if(!dateStr) return false;
+  const d = new Date(`${dateStr}T23:59:59`);
+  if(Number.isNaN(d.getTime())) return false;
+  return d.getTime() < Date.now();
+}
+
 
 function featuredRelease(){
   // prefer latest by date; fallback first
@@ -201,7 +240,7 @@ function viewHome(){
 
   const ev = Array.isArray(state.events) ? state.events.slice() : [];
   const upcoming = ev
-    .filter(e => (e.status||'').toUpperCase() === 'UPCOMING')
+    .filter(e => (e.status||'').toUpperCase() === 'UPCOMING' && !isPastDate(e.date))
     .sort((a,b)=> (a.date||'').localeCompare(b.date||''))
     .slice(0,2);
 
@@ -307,7 +346,7 @@ function viewHome(){
 function viewEvents(){
   const ev = Array.isArray(state.events) ? state.events.slice() : [];
   const upcoming = ev
-    .filter(x => (x.status||'').toUpperCase() === 'UPCOMING')
+    .filter(x => (x.status||'').toUpperCase() === 'UPCOMING' && !isPastDate(x.date))
     .filter(x => (x.segment||'').toUpperCase() === 'ROSTER' || (Array.isArray(x.artistIds) && x.artistIds.some(id=> String(id).toLowerCase()==='dktech')))
     .sort((a,b)=> (a.date||'').localeCompare(b.date||''));
 
@@ -930,15 +969,33 @@ function render(){
     });
   });
 document.querySelectorAll('[data-book]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const name = btn.getAttribute('data-book');
-      $('#bkArtist').value = name || '';
-      // scroll to form on desktop
+    btn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const name = btn.getAttribute('data-book') || '';
+
+      // If invoked outside Booking tab, route first then apply the value post-render
+      if(state.tab !== 'booking'){
+        state.ui.bookArtist = name;
+        setActiveTab('booking');
+        return;
+      }
+
+      const field = $('#bkArtist');
+      if(field) field.value = name;
       const f = $('#bkSend'); if(f) f.scrollIntoView({behavior:'smooth', block:'center'});
     });
   });
 
   initSearchFiltering();
+
+  // apply deferred booking artist (from Artists tab)
+  if(state.tab === 'booking' && state.ui && state.ui.bookArtist){
+    const field = $('#bkArtist');
+    if(field) field.value = state.ui.bookArtist;
+    const f = $('#bkSend'); if(f) f.scrollIntoView({behavior:'smooth', block:'center'});
+    state.ui.bookArtist = '';
+  }
+
 
   const bkSend = $('#bkSend');
   if(bkSend){
@@ -1069,6 +1126,10 @@ function registerSW(){
   if(!('serviceWorker' in navigator)) return;
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
 }
+
+window.addEventListener('popstate', ()=>{
+  setActiveTab(tabFromPath(location.pathname), {push:false});
+});
 
 document.addEventListener('click', (e)=>{
   const btn = e.target.closest('.tab');

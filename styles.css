@@ -67,7 +67,7 @@ body{
   overflow:hidden;
 }
 .card__hd{padding:14px 14px 10px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}
-..card__title{
+.card__title{
   font-weight:800;
   font-size:16px;
   letter-spacing:0.02em;
@@ -85,6 +85,8 @@ body{
 }
 .badge .dot{width:8px;height:8px;border-radius:999px;background:rgba(24,58,122,.8); box-shadow: 0 0 18px rgba(24,58,122,.8);}
 .badge--red .dot{background:rgba(90,11,20,.9); box-shadow: 0 0 18px rgba(90,11,20,.65);}
+.badge--accent{color:rgba(235,240,255,.92);border-color:rgba(185,28,28,.45);background:rgba(185,28,28,.10)}
+.badge--accent .dot{background:rgba(185,28,28,.9); box-shadow: 0 0 18px rgba(185,28,28,.55);}
 
 .hero{
   display:grid;gap:14px;
@@ -248,8 +250,6 @@ textarea{min-height:120px;resize:vertical;line-height:1.4}
 .img--giveaway img{
   height:100%;
   object-fit:cover;
-}
-
 }
 .img--qr img{
   width:100%;
@@ -499,6 +499,8 @@ textarea{min-height:120px;resize:vertical;line-height:1.4}
 .relCard__actions{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap}
 .btn--sm{padding:8px 10px;border-radius:12px;font-size:12px}
 .btn--outline{background:transparent}
+.btn--ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+.btn--ghost:hover{background:rgba(255,255,255,.04)}
 .pill{
   display:inline-flex;align-items:center;gap:6px;
   font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;
@@ -531,3 +533,10 @@ textarea{min-height:120px;resize:vertical;line-height:1.4}
 }
 .socialRow{display:flex;gap:8px;flex-wrap:wrap}
 .socialRow a{font-size:12px}
+
+
+/* News + misc */
+.newsItem{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:10px 0}
+.newsItem__title{font-weight:850;letter-spacing:.01em}
+.link{color:rgba(233,236,255,.92);text-decoration:underline;text-underline-offset:3px}
+.link:hover{opacity:.9}

@@ -15,6 +15,7 @@ const CORE_ASSETS = [
   './news.json',
   './podcast.json',
   './store.json',
+  './playlists.json',
   './settings.json',
   './feedback.json',
   './manifest.webmanifest'
