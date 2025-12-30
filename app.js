@@ -680,6 +680,22 @@ function viewBooking(){
               <div class="label">Artist</div>
               <input class="input" id="bkArtist" placeholder="DKTech / Wyrus / ..." />
             </div>
+
+            <div class="grid cols2">
+              <div>
+                <div class="label">Inquiry type</div>
+                <select class="input" id="bkType">
+                  <option value="Event booking">Event booking</option>
+                  <option value="Other inquiry">Other inquiry (DKTech only)</option>
+                </select>
+                <div class="small muted" id="bkPolicyHint">Roster policy: non DKTech artists accept event bookings only.</div>
+              </div>
+              <div>
+                <div class="label">Your contact email</div>
+                <input class="input" id="bkContactEmail" placeholder="you@company.com" />
+              </div>
+            </div>
+
             <div>
               <div class="label">Event / Venue</div>
               <input class="input" id="bkEvent" placeholder="Event name + venue" />
@@ -802,15 +818,15 @@ function viewStore(){
   `;
 
   const resolveImg = (it)=>{
+    // Prefer explicit image; otherwise use safe defaults (avoid empty/broken cards).
     if(it.image) return it.image;
-    const guess = (it.title||'').toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');
-    const w = `./assets/store_webp/${guess}.webp`;
-    const p = `./assets/store/${guess}.png`;
-    return w || p;
+    const cat = String(it.category||'').toUpperCase();
+    if(cat === 'DIGITAL' || cat === 'OFFERS') return './assets/store/full_release_bundle.webp';
+    return './assets/store/full_release_bundle.png';
   };
 
   const card = (it)=> {
-    const img = it.image || '';
+    const img = resolveImg(it);
     const price = it.price ? `<span class="pill pill--accent">${esc(it.price)}</span>` : '';
     const action = ()=>{
       const t = (it.ctaType||'').toLowerCase();
@@ -831,11 +847,12 @@ function viewStore(){
           ${price}
         </div>
         <div class="card__bd">
-          ${img ? `<div class="img"><img loading="lazy" src="${esc(img)}" alt="${esc(it.title||'item')}"></div>` : ``}
+          ${img ? `<div class="img"><img loading="lazy" src="${esc(img)}" alt="${esc(it.title||'item')}"
+                 onerror="this.onerror=null;this.src='./assets/store/full_release_bundle.png';"></div>` : ``}
           ${it.description ? `<div class="p">${esc(it.description)}</div>` : ``}
           <div class="actions">
             ${action()}
-            <button class="btn btn--ghost" data-go="booking">Custom order</button>
+            <button class="btn btn--ghost" type="button" data-book="DKTech">Booking inquiry</button>
           </div>
         </div>
       </article>
@@ -983,6 +1000,7 @@ document.querySelectorAll('[data-book]').forEach(btn=>{
       const field = $('#bkArtist');
       if(field) field.value = name;
       const f = $('#bkSend'); if(f) f.scrollIntoView({behavior:'smooth', block:'center'});
+      applyBookingPolicy();
     });
   });
 
@@ -993,15 +1011,45 @@ document.querySelectorAll('[data-book]').forEach(btn=>{
     const field = $('#bkArtist');
     if(field) field.value = state.ui.bookArtist;
     const f = $('#bkSend'); if(f) f.scrollIntoView({behavior:'smooth', block:'center'});
+    applyBookingPolicy();
     state.ui.bookArtist = '';
   }
 
+  // enforce roster booking policy on load
+  if(state.tab === 'booking'){ applyBookingPolicy(); }
+
+  function applyBookingPolicy(){
+    const artist = (($('#bkArtist')?.value) || '').trim();
+    const isDK = /^dktech$/i.test(artist) || /dktech/i.test(artist);
+    const type = $('#bkType');
+    const hint = $('#bkPolicyHint');
+    if(type){
+      if(isDK){
+        type.disabled = false;
+      } else {
+        type.value = 'Event booking';
+        type.disabled = true;
+      }
+    }
+    if(hint){
+      hint.textContent = isDK
+        ? 'Inquiry type available for DKTech. Other roster artists accept event bookings only.'
+        : 'Roster policy: non DKTech artists accept event bookings only.';
+    }
+  }
+
+  const bkArtist = $('#bkArtist');
+  if(bkArtist){ bkArtist.oninput = applyBookingPolicy; }
 
   const bkSend = $('#bkSend');
   if(bkSend){
     bkSend.onclick = ()=>{
       const email = state.config.contacts.infoEmail;
       const artist = $('#bkArtist').value.trim() || 'Artist';
+      const isDK = /^dktech$/i.test(artist) || /dktech/i.test(artist);
+      const typeRaw = ($('#bkType')?.value || 'Event booking').trim();
+      const type = isDK ? typeRaw : 'Event booking';
+      const contactEmail = ($('#bkContactEmail')?.value || '').trim();
       const event = $('#bkEvent').value.trim() || 'Event/Venue';
       const date = $('#bkDate').value.trim() || 'YYYY-MM-DD';
       const city = $('#bkCity').value.trim() || 'City/Country';
@@ -1010,12 +1058,14 @@ document.querySelectorAll('[data-book]').forEach(btn=>{
       const tech = $('#bkTech').value.trim() || 'Tech setup';
       const msg = $('#bkMsg').value.trim();
 
-      const subject = `Booking Request — ${artist} — ${date} — ${event}`;
+      const subject = `RBR Booking — ${artist} — ${type} — ${date} — ${event}`;
       const body = [
         `Artist: ${artist}`,
+        `Inquiry type: ${type}`,
         `Event/Venue: ${event}`,
         `Date: ${date}`,
         `City/Country: ${city}`,
+        `Contact email: ${contactEmail || '(not provided)'}`,
         `Set length: ${set}`,
         `Fee/Budget range: ${budget}`,
         `Technical setup: ${tech}`,
@@ -1043,6 +1093,7 @@ document.querySelectorAll('[data-book]').forEach(btn=>{
       const subject = `Demo Submission — ${artist}`;
       const body = [
         `Artist: ${artist}`,
+        `Inquiry type: ${type}`,
         `Location: ${loc}`,
         `Private link: ${link}`,
         `BPM: ${bpm || '(optional)'}`,
