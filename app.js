@@ -12,7 +12,7 @@ const $ = (sel) => document.querySelector(sel);
 function esc(s){ return String(s || '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 
 async function loadAll(){
-  const BUILD = "2025-12-21-REV5.0";
+  const BUILD = "2025-12-30-REV5.1";
   const fetchJson = async (path) => {
     const r = await fetch(path, { cache: 'no-store' });
     if(!r.ok) throw new Error(`HTTP ${r.status} for ${path}`);
@@ -63,8 +63,8 @@ async function loadAll(){
       if(el) el.href = cfg.links.website;
     }
     if(cfg?.appName) document.title = cfg.appName;
-
-    render();
+    // initial route -> tab
+    setActiveTab(tabFromPath(location.pathname), {push:false});
     initSignupOnce();
     registerSW();
 
@@ -83,11 +83,42 @@ async function loadAll(){
   }
 }
 
-function setActiveTab(tab){
+function tabFromPath(pathname){
+  const p = String(pathname||'/').replace(/^\/+|\/+$/g,'').toLowerCase();
+  const map = {
+    '': 'home',
+    'home': 'home',
+    'events': 'events',
+    'artists': 'artists',
+    'releases': 'releases',
+    'store': 'store',
+    'shop': 'store',
+    'more': 'more',
+    'news': 'news',
+    'booking': 'booking',
+    'demo': 'demo'
+  };
+  return map[p] || 'home';
+}
+
+function pathFromTab(tab){
+  if(!tab || tab==='home') return '/';
+  if(tab==='store') return '/store';
+  return `/${tab}`;
+}
+
+function setActiveTab(tab, opts={push:true}){
   state.tab = tab;
+  // sync bottom nav active state when the tab exists there
   document.querySelectorAll('.tab').forEach(b=>{
     b.classList.toggle('is-active', b.dataset.tab === tab);
   });
+
+  if(opts.push){
+    const path = pathFromTab(tab);
+    if(location.pathname !== path) history.pushState({tab}, '', path);
+  }
+
   render();
   window.scrollTo({top:0, behavior:'auto'});
 }
@@ -130,6 +161,14 @@ function relFormats(r){
   if(r.elasticstage || (state.config && state.config.links && state.config.links.elasticStage)) { arr.push('Vinyl'); arr.push('CD'); }
   return [...new Set(arr)];
 }
+
+function isPastDate(dateStr){
+  if(!dateStr) return false;
+  const d = new Date(`${dateStr}T23:59:59`);
+  if(Number.isNaN(d.getTime())) return false;
+  return d.getTime() < Date.now();
+}
+
 
 function featuredRelease(){
   // prefer latest by date; fallback first
@@ -201,7 +240,7 @@ function viewHome(){
 
   const ev = Array.isArray(state.events) ? state.events.slice() : [];
   const upcoming = ev
-    .filter(e => (e.status||'').toUpperCase() === 'UPCOMING')
+    .filter(e => (e.status||'').toUpperCase() === 'UPCOMING' && !isPastDate(e.date))
     .sort((a,b)=> (a.date||'').localeCompare(b.date||''))
     .slice(0,2);
 
@@ -307,7 +346,7 @@ function viewHome(){
 function viewEvents(){
   const ev = Array.isArray(state.events) ? state.events.slice() : [];
   const upcoming = ev
-    .filter(x => (x.status||'').toUpperCase() === 'UPCOMING')
+    .filter(x => (x.status||'').toUpperCase() === 'UPCOMING' && !isPastDate(x.date))
     .filter(x => (x.segment||'').toUpperCase() === 'ROSTER' || (Array.isArray(x.artistIds) && x.artistIds.some(id=> String(id).toLowerCase()==='dktech')))
     .sort((a,b)=> (a.date||'').localeCompare(b.date||''));
 
@@ -641,6 +680,22 @@ function viewBooking(){
               <div class="label">Artist</div>
               <input class="input" id="bkArtist" placeholder="DKTech / Wyrus / ..." />
             </div>
+
+            <div class="grid cols2">
+              <div>
+                <div class="label">Inquiry type</div>
+                <select class="input" id="bkType">
+                  <option value="Event booking">Event booking</option>
+                  <option value="Other inquiry">Other inquiry (DKTech only)</option>
+                </select>
+                <div class="small muted" id="bkPolicyHint">Roster policy: non DKTech artists accept event bookings only.</div>
+              </div>
+              <div>
+                <div class="label">Your contact email</div>
+                <input class="input" id="bkContactEmail" placeholder="you@company.com" />
+              </div>
+            </div>
+
             <div>
               <div class="label">Event / Venue</div>
               <input class="input" id="bkEvent" placeholder="Event name + venue" />
@@ -763,15 +818,15 @@ function viewStore(){
   `;
 
   const resolveImg = (it)=>{
+    // Prefer explicit image; otherwise use safe defaults (avoid empty/broken cards).
     if(it.image) return it.image;
-    const guess = (it.title||'').toLowerCase().replace(/\s+/g,'_').replace(/[^a-z0-9_]/g,'');
-    const w = `./assets/store_webp/${guess}.webp`;
-    const p = `./assets/store/${guess}.png`;
-    return w || p;
+    const cat = String(it.category||'').toUpperCase();
+    if(cat === 'DIGITAL' || cat === 'OFFERS') return './assets/store/full_release_bundle.webp';
+    return './assets/store/full_release_bundle.png';
   };
 
   const card = (it)=> {
-    const img = it.image || '';
+    const img = resolveImg(it);
     const price = it.price ? `<span class="pill pill--accent">${esc(it.price)}</span>` : '';
     const action = ()=>{
       const t = (it.ctaType||'').toLowerCase();
@@ -792,11 +847,12 @@ function viewStore(){
           ${price}
         </div>
         <div class="card__bd">
-          ${img ? `<div class="img"><img loading="lazy" src="${esc(img)}" alt="${esc(it.title||'item')}"></div>` : ``}
+          ${img ? `<div class="img"><img loading="lazy" src="${esc(img)}" alt="${esc(it.title||'item')}"
+                 onerror="this.onerror=null;this.src='./assets/store/full_release_bundle.png';"></div>` : ``}
           ${it.description ? `<div class="p">${esc(it.description)}</div>` : ``}
           <div class="actions">
             ${action()}
-            <button class="btn btn--ghost" data-go="booking">Custom order</button>
+            <button class="btn btn--ghost" type="button" data-book="DKTech">Booking inquiry</button>
           </div>
         </div>
       </article>
@@ -930,21 +986,70 @@ function render(){
     });
   });
 document.querySelectorAll('[data-book]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      const name = btn.getAttribute('data-book');
-      $('#bkArtist').value = name || '';
-      // scroll to form on desktop
+    btn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      const name = btn.getAttribute('data-book') || '';
+
+      // If invoked outside Booking tab, route first then apply the value post-render
+      if(state.tab !== 'booking'){
+        state.ui.bookArtist = name;
+        setActiveTab('booking');
+        return;
+      }
+
+      const field = $('#bkArtist');
+      if(field) field.value = name;
       const f = $('#bkSend'); if(f) f.scrollIntoView({behavior:'smooth', block:'center'});
+      applyBookingPolicy();
     });
   });
 
   initSearchFiltering();
+
+  // apply deferred booking artist (from Artists tab)
+  if(state.tab === 'booking' && state.ui && state.ui.bookArtist){
+    const field = $('#bkArtist');
+    if(field) field.value = state.ui.bookArtist;
+    const f = $('#bkSend'); if(f) f.scrollIntoView({behavior:'smooth', block:'center'});
+    applyBookingPolicy();
+    state.ui.bookArtist = '';
+  }
+
+  // enforce roster booking policy on load
+  if(state.tab === 'booking'){ applyBookingPolicy(); }
+
+  function applyBookingPolicy(){
+    const artist = (($('#bkArtist')?.value) || '').trim();
+    const isDK = /^dktech$/i.test(artist) || /dktech/i.test(artist);
+    const type = $('#bkType');
+    const hint = $('#bkPolicyHint');
+    if(type){
+      if(isDK){
+        type.disabled = false;
+      } else {
+        type.value = 'Event booking';
+        type.disabled = true;
+      }
+    }
+    if(hint){
+      hint.textContent = isDK
+        ? 'Inquiry type available for DKTech. Other roster artists accept event bookings only.'
+        : 'Roster policy: non DKTech artists accept event bookings only.';
+    }
+  }
+
+  const bkArtist = $('#bkArtist');
+  if(bkArtist){ bkArtist.oninput = applyBookingPolicy; }
 
   const bkSend = $('#bkSend');
   if(bkSend){
     bkSend.onclick = ()=>{
       const email = state.config.contacts.infoEmail;
       const artist = $('#bkArtist').value.trim() || 'Artist';
+      const isDK = /^dktech$/i.test(artist) || /dktech/i.test(artist);
+      const typeRaw = ($('#bkType')?.value || 'Event booking').trim();
+      const type = isDK ? typeRaw : 'Event booking';
+      const contactEmail = ($('#bkContactEmail')?.value || '').trim();
       const event = $('#bkEvent').value.trim() || 'Event/Venue';
       const date = $('#bkDate').value.trim() || 'YYYY-MM-DD';
       const city = $('#bkCity').value.trim() || 'City/Country';
@@ -953,12 +1058,14 @@ document.querySelectorAll('[data-book]').forEach(btn=>{
       const tech = $('#bkTech').value.trim() || 'Tech setup';
       const msg = $('#bkMsg').value.trim();
 
-      const subject = `Booking Request — ${artist} — ${date} — ${event}`;
+      const subject = `RBR Booking — ${artist} — ${type} — ${date} — ${event}`;
       const body = [
         `Artist: ${artist}`,
+        `Inquiry type: ${type}`,
         `Event/Venue: ${event}`,
         `Date: ${date}`,
         `City/Country: ${city}`,
+        `Contact email: ${contactEmail || '(not provided)'}`,
         `Set length: ${set}`,
         `Fee/Budget range: ${budget}`,
         `Technical setup: ${tech}`,
@@ -986,6 +1093,7 @@ document.querySelectorAll('[data-book]').forEach(btn=>{
       const subject = `Demo Submission — ${artist}`;
       const body = [
         `Artist: ${artist}`,
+        `Inquiry type: ${type}`,
         `Location: ${loc}`,
         `Private link: ${link}`,
         `BPM: ${bpm || '(optional)'}`,
@@ -1069,6 +1177,10 @@ function registerSW(){
   if(!('serviceWorker' in navigator)) return;
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
 }
+
+window.addEventListener('popstate', ()=>{
+  setActiveTab(tabFromPath(location.pathname), {push:false});
+});
 
 document.addEventListener('click', (e)=>{
   const btn = e.target.closest('.tab');
