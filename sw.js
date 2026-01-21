@@ -24,7 +24,15 @@ const CORE_ASSETS = [
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(CACHE_NAME);
-    await cache.addAll(CORE_ASSETS.map(u => new Request(u, {cache:'reload'})));
+    // Tolerant caching: fetch each resource and only cache successful responses
+    for(const u of CORE_ASSETS){
+      try{
+        const r = await fetch(new Request(u, {cache: 'reload'}));
+        if(r && r.ok){
+          try{ await cache.put(u, r.clone()); }catch(e){}
+        }
+      }catch(e){ /* ignore individual failures */ }
+    }
     self.skipWaiting();
   })());
 });
@@ -66,7 +74,7 @@ self.addEventListener('fetch', (event) => {
       const cache = await caches.open(CACHE_NAME);
       const cached = await cache.match('./index.html');
       const fetchPromise = fetch(req).then(r => {
-        cache.put('./index.html', r.clone());
+        try{ cache.put('./index.html', r.clone()); }catch(e){}
         return r;
       }).catch(() => cached);
       return cached || fetchPromise;
@@ -78,9 +86,13 @@ self.addEventListener('fetch', (event) => {
   event.respondWith((async () => {
     const cached = await caches.match(req);
     if (cached) return cached;
-    const net = await fetch(req);
-    const cache = await caches.open(CACHE_NAME);
-    cache.put(req, net.clone());
-    return net;
+    try{
+      const net = await fetch(req);
+      const cache = await caches.open(CACHE_NAME);
+      try{ cache.put(req, net.clone()); }catch(e){}
+      return net;
+    }catch(e){
+      return Response.error();
+    }
   })());
 });
