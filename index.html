@@ -35,7 +35,6 @@
         <span class="tab__icon" aria-hidden="true">
           <svg viewBox="0 0 24 24" focusable="false"><path d="M7 2v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2zM5 9h14v11H5z"/></svg>
         </span><span class="tab__label">Events</span>
-      
       </button>
       <button class="tab" data-tab="artists" aria-label="Artists">
         <span class="tab__icon" aria-hidden="true">
@@ -49,46 +48,17 @@
       </button>
       <button class="tab" data-tab="store" aria-label="Store">
         <span class="tab__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" focusable="false"><path d="M7 7V6a5 5 0 0 1 10 0v1h3v14H4V7h3zm2 0h6V6a3 3 0 0 0-6 0v1zm-3 2v10h14V9H6z"/></svg>
+          <svg viewBox="0 0 24 24" focusable="false"><path d="M12 2L2 7v13a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7L12 2z"/></svg>
         </span><span class="tab__label">Store</span>
       </button>
       <button class="tab" data-tab="more" aria-label="More">
         <span class="tab__icon" aria-hidden="true">
-          <svg viewBox="0 0 24 24" focusable="false"><path d="M5 10h2v2H5zm6 0h2v2h-2zm6 0h2v2h-2z"/></svg>
+          <svg viewBox="0 0 24 24" focusable="false"><path d="M12 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm0 6a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM12 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
         </span><span class="tab__label">More</span>
       </button>
     </nav>
+
   </div>
-
-  <script src="./app.js"></script>
-
-  <!-- Signup Modal (Free Entry) -->
-  <div class="modal" id="signupModal" aria-hidden="true">
-    <div class="modal__backdrop" data-modal-close="signup"></div>
-    <div class="modal__panel" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
-      <div class="modal__hd">
-        <div>
-          <div class="modal__kicker">RBR — Guestlist</div>
-          <div class="modal__title" id="signupTitle">Sign up / free enter</div>
-        </div>
-        <button class="iconbtn" type="button" aria-label="Close" data-modal-close="signup">✕</button>
-      </div>
-      <div class="modal__bd">
-        <div class="p">Leave your email to receive guestlist / free entry confirmations and underground drops.</div>
-        <div class="form">
-          <label class="label" for="signupEmail">Email</label>
-          <input class="input" id="signupEmail" type="email" placeholder="you@email.com" autocomplete="email" inputmode="email" />
-          <div class="small muted">By submitting, you confirm you want notifications from Rhythmic Beatz Records.</div>
-          <div class="actions" style="margin-top:12px">
-            <button class="btn btn--primary" type="button" id="signupSubmit">Submit</button>
-            <button class="btn btn--blue" type="button" data-modal-close="signup">Cancel</button>
-          </div>
-          <div class="hr"></div>
-          <div class="small muted" id="signupResult" aria-live="polite"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <script src="./app.js" defer></script>
 </body>
 </html>
