@@ -1,8 +1,8 @@
-﻿/* RBR PWA Service Worker
+/* RBR PWA Service Worker
    CACHE VERSION: 2025-12-30-REV6.1
    Purpose: keep app usable offline, but avoid "stuck on old UI" during development.
 */
-const CACHE_NAME = 'rbr-pwa-2026-01-29-REV7';
+const CACHE_NAME = 'rbr-pwa-2025-12-30-REV6.1';
 const CORE_ASSETS = [
   './',
   './index.html',
